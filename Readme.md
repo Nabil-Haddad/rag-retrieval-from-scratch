@@ -40,17 +40,20 @@ and building the naive version first makes that reason obvious instead of abstra
 
 ## Structure
 
-| File | What it holds |
-|------|---------------|
-| `indexing.py` | `chunk_text()` — the sliding-window chunker (tunable window + overlap) |
-| `embed.py` | `embedder()` — turns a chunk into a vector by counting vocabulary words |
-| `search.py` | `dot()`, `magnitude()`, `cosign()` — cosine similarity, built up from the dot product |
-| `pipeline.py` | ties it together: chunk -> embed -> store -> query -> rank |
+Each stage of the pipeline is its own class, so the pieces can be swapped independently
+(a real embedder can replace `Embedder` without touching anything else).
+
+| File | Class | What it holds |
+|------|-------|----------------|
+| `indexing.py` | `Chunker` | the sliding-window chunker (tunable window + overlap) |
+| `embed.py` | `Embedder` | owns a vocabulary and turns a chunk into a count vector |
+| `search.py` | `Similarity` | `dot()`, `magnitude()`, `cosign()` — cosine similarity, built up from the dot product |
+| `pipline.py` | `Pipeline` | ties it together: chunk -> embed -> store -> query -> rank |
 
 ## Run it
 
 ```bash
-python pipeline.py
+python pipline.py
 ```
 
 You'll see each chunk scored against a query by cosine similarity, and you'll spot the moments
@@ -60,7 +63,7 @@ removes.
 ## What's next
 
 The whole pipeline is designed so only **one** piece needs to change to go from toy to real:
-swap the counting `embedder()` for a trained neural embedder (e.g. `sentence-transformers`).
+swap the counting `Embedder` for a trained neural embedder (e.g. `sentence-transformers`).
 Everything else, chunking, storage, cosine similarity, stays exactly the same. That's the
 next step for this repo.
 

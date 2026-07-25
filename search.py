@@ -1,32 +1,32 @@
-import numpy as np
-from typing import List
 import math
+from typing import List
 
-def dot(a:List[int], b:List[int])->int:
-    result = 0
-    for i, e in enumerate(a):
-        result = result + (e * b[i])
-    return result
-
-def dot_numpy(a:List[int], b:List[int])->int:
-    a_np = np.array(a)
-    b_np = np.array(b)
-    return np.dot(a_np, b_np)
+import numpy as np
 
 
-def magnitude(a:List[int])->float:
-    return math.sqrt(dot_numpy(a, a))
+class Similarity:
+    @staticmethod
+    def dot(a: List[int], b: List[int]) -> int:
+        result = 0
+        for i, e in enumerate(a):
+            result = result + (e * b[i])
+        return result
 
-# takes two vectors and return HOW MUCH SIMULAR THEY ARE
-def cosign(a:List[int], b: List[int])-> float:
-    if magnitude(a) == 0 or magnitude(b) == 0:
-        return 0
-    return dot_numpy(a, b)/ (magnitude(a) * magnitude(b) )
+    @staticmethod
+    def dot_numpy(a: List[int], b: List[int]) -> int:
+        a_np = np.array(a)
+        b_np = np.array(b)
+        return np.dot(a_np, b_np)
 
+    @classmethod
+    def magnitude(cls, a: List[int]) -> float:
+        return math.sqrt(cls.dot_numpy(a, a))
 
-vector_1 = [1, 0, 0, 1]
-vector_2 = [0, 0, 0, 1]
-
-#print(dot_numpy(vector_1,vector_2))
-#print(magnitude([1,0,0,1]))
-#print(cosign(vector_1, vector_2))
+    # takes two vectors and return HOW MUCH SIMULAR THEY ARE
+    @classmethod
+    def cosign(cls, a: List[int], b: List[int]) -> float:
+        mag_a = cls.magnitude(a)
+        mag_b = cls.magnitude(b)
+        if mag_a == 0 or mag_b == 0:
+            return 0
+        return cls.dot_numpy(a, b) / (mag_a * mag_b)
